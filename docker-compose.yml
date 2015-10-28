@@ -1,0 +1,9 @@
+recommender:
+    build: ./recommender
+    external_links:
+        - recommenderdata_mongo_1
+
+# trainer:
+#     build: ./trainer
+#     links:
+#         - mongo
