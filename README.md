@@ -27,12 +27,12 @@ docker-compose build
 
 #### Run a container
 ```
-docker-compose run recommender
+docker-compose run --rm recommender
 ```
 
 #### Attach to bash in a container
 ```
-docker-compose run recommender bash
+docker-compose run --rm recommender bash
 ```
 
 #### Logs
