@@ -1,0 +1,40 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script type="text/javascript" src="{% static 'js/jquery-1.11.3.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
+    
+    {% block headpart %}
+    <title></title>
+    {% endblock %}
+</head>
+<body>
+    <nav class="main-menu navbar navbar-default navbar-fixed-top">
+        <ul class="nav navbar-nav">
+            <li class="nav-custom">
+                <a href="http://192.168.1.80:9000">Recommender System</a>
+            </li>
+        </ul>
+        <ul class="navbar-right">
+            <li>
+
+                <div id="logo">
+                    <a href="http://vionel.com" target="_blank">
+                        <img src="{% static 'images/logo.png' %}">
+                    </a>
+                </div>
+
+            </li>
+        </ul>
+    </nav>
+
+    {% block featurepage %}
+    {% endblock %}
+
+</body>
+</html>
+

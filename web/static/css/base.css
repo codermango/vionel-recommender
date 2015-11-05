@@ -1,0 +1,62 @@
+body {
+    background-color: black
+}
+
+#logo {
+    background-color: transparent;
+}
+
+.main-menu .navbar {
+    padding-left: 50px;
+    padding-right: 50px;
+    border: 0;
+    height: 80px;
+}
+
+.main-menu .nav-custom a {
+    font-size: 1.2em;
+    color: white !important;
+    line-height: 60px !important;
+    height: 60px;
+    display: table;
+    padding: 0 20px 0 0;
+}
+
+.open a{
+    background-color: #021420 !important;
+}
+
+.dropdown-menu {
+    background-color: #021420;
+}
+
+
+.main-menu .nav-backhome a span{
+display: table-cell;
+vertical-align: middle;
+}
+
+
+.main-menu .navbar-right {
+    margin: 0;
+    padding: 0;
+    line-height: 60px;
+}
+
+.main-menu .navbar-nav {
+    margin: 0;
+    padding: 0;
+    line-height: 60px;
+}
+
+.main-menu .back-icon {
+    /*font-size: 3em;*/
+}
+
+.main-menu{
+    height: 60px;
+    background-color: #021420;
+    border: none;
+    padding: 0 40px;
+
+}
