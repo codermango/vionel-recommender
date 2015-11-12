@@ -1,36 +1,17 @@
 #!coding=utf-8
 import json
 import math
+from collections import Counter
+import os
+
 from recommender_helper import RecommenderHelper
 from recommender_db import RecommenderDB
 
-from collections import Counter
-import os
+
 
 
 # recommenderdb = RecommenderDB_neo4j()
 recommenderdb = RecommenderDB()
-
-def filter_by_rating_and_releaseyear(combined_movieid_sim_counter):
-
-    movieid_imdbrating_dict = recommenderdb.get_imdbid_feature_dict("imdbRating")
-    movieid_releaseyear_dict = recommenderdb.get_imdbid_feature_dict("releaseYear")
-
-    for item in combined_movieid_sim_counter:
-        try:
-            # combined_movieid_sim_counter[item] *= movieid_imdbrating_dict[item]
-            if movieid_releaseyear_dict[item] < 1990:
-                combined_movieid_sim_counter[item] *= 0.6
-            elif movieid_releaseyear_dict[item] >= 1990 and movieid_releaseyear_dict[item] < 2000:
-                combined_movieid_sim_counter[item] *= 0.7
-            elif movieid_releaseyear_dict[item] >= 2000 and movieid_releaseyear_dict[item] < 2010:
-                combined_movieid_sim_counter[item] *= 0.8
-            elif movieid_releaseyear_dict[item] >= 2010 and movieid_releaseyear_dict[item] < 2020:
-                combined_movieid_sim_counter[item] *= 0.9
-        except KeyError:
-            combined_movieid_sim_counter[item] * 0.5
-            
-    return combined_movieid_sim_counter
 
 
 def filter_by_language(input_movieid_list, combined_movieid_sim_counter):
@@ -136,7 +117,6 @@ def recommend(input_movieid_list, num_of_recommended_movies):
 
     combined_movieid_sim_counter = imdbgenre_movieid_sim_counter + imdbmainactor_movieid_sim_counter + imdbdirector_movieid_sim_counter + imdbkeyword_movieid_sim_counter + wikikeyword_movieid_sim_counter + vioneltheme_movieid_sim_counter + vionelscene_movieid_sim_counter + locationcountry_movieid_sim_counter + locationcity_movieid_sim_counter + rgb_movieid_sim_counter + brightness_movieid_sim_counter
 
-    # combined_movieid_sim_counter = imdbgenre_movieid_sim_counter + wikikeyword_movieid_sim_counter + vioneltheme_movieid_sim_counter + vionelscene_movieid_sim_counter + rgb_movieid_sim_counter + brightness_movieid_sim_counter
 
     for key in input_movieid_list:
         del combined_movieid_sim_counter[key]
@@ -153,11 +133,7 @@ def recommend(input_movieid_list, num_of_recommended_movies):
         del brightness_movieid_sim_counter[key]
 
 
-    
-
     # filter
-    # 乘上rating和releaseYear产生的系数
-    # combined_movieid_sim_counter = filter_by_rating_and_releaseyear(combined_movieid_sim_counter)
     combined_movieid_sim_counter = filter_by_language(input_movieid_list, combined_movieid_sim_counter)
 
     final_co_recommended_movies = combined_movieid_sim_counter.most_common(num_of_recommended_movies)

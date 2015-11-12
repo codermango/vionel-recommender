@@ -47,7 +47,6 @@ class RecommenderDB:
         # get all the features
         feature_list = self.get_all_feature_list(feature_name)
 
-
         all_feature_dict_list = self.boxerMoviesCollection.find({}, {feature_name: 1, "_id": 0})
         all_feature_list = []
         for movie in all_feature_dict_list:
@@ -75,7 +74,6 @@ class RecommenderDB:
         rgb_dict = self.get_feature_featurenum_dict("RGB")
         brightness_dict = self.get_feature_featurenum_dict("Brightness")
         genre_dict = self.get_feature_featurenum_dict("imdbGenres")
-        # actor_dict = self.get_feature_featurenum_dict("imdbActors")
         director_dict = self.get_feature_featurenum_dict("imdbDirectors")
         imdbkeyword_dict = self.get_feature_featurenum_dict("imdbKeywords")
         wikikeyword_dict = self.get_feature_featurenum_dict("wikiKeywords")
@@ -88,7 +86,6 @@ class RecommenderDB:
 
         result_dict = {}
         result_dict["imdbGenres"] = genre_dict
-        # result_dict["imdbActors"] = actor_dict
         result_dict["imdbDirectors"] = director_dict
         result_dict["imdbKeywords"] = imdbkeyword_dict
         result_dict["wikiKeywords"] = wikikeyword_dict
@@ -100,21 +97,11 @@ class RecommenderDB:
         result_dict["RGB"] = rgb_dict
         result_dict["Brightness"] = brightness_dict
 
-
-
         with open("feature_num.json", "w") as feature_num_file:
             result_dict_json = json.dumps(result_dict)
             feature_num_file.write(result_dict_json)
 
-    # def change_feature_num(self):
-    #     locationcountry_num_dict = self.get_feature_featurenum_dict("locationCountry")
-    #     print locationcountry_num_dict
 
-    #     with open("feature_num.json", "w+") as feature_num_file:
-    #         feature_num_dict = json.loads(feature_num_file.readline())
-    #         feature_num_dict["locationCountry"] = locationcountry_num_dict
-    #         feature_num_json = json.dumps(feature_num_dict)
-    #         feature_num_file.write(feature_num_json)
-
-# recommenderdb = RecommenderDB()
-# recommenderdb.create_feature_num_collection()
+# if __name__ == '__main__':
+#     recommenderdb = RecommenderDB()
+#     recommenderdb.create_feature_num_collection()
