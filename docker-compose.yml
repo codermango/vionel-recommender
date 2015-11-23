@@ -4,13 +4,13 @@ mongo:
     - /data/db:/data/db
   ports:
     - "27017:27017"
-web:
-  build: ./web
-  command: python ./web/manage.py runserver 0.0.0.0:8000
-  volumes:
-    - .:/code
-  ports:
-    - "8000:8000"
+cb_recommender:
+  build: ./cb_recommender
+  command: python ./cb_recommender recommender.py
+  # volumes:
+  #   - .:/code
+  # ports:
+  #   - "8000:8000"
   links:
     - mongo
 

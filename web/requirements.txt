@@ -1,2 +1,0 @@
-Django
-pymongo==3.0.3
