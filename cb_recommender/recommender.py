@@ -1,5 +1,6 @@
 #!coding=utf-8
 import json
+import sys
 from collections import Counter
 
 from _vionel_helper import *
@@ -23,7 +24,7 @@ class SimilarityRecommender(object):
             'RGB': 0.25,
             'brightness': 0.25
         }
-        self.mongo_manager = MongoManager('VionelMovies', 'BoxerMovies', '172.17.42.1', 27017, '', '')
+        self.mongo_manager = MongoManager()
 
 
     def __get_imdbid_feature_dict(self, feature_name):

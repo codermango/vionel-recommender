@@ -4,7 +4,7 @@ import json
 
 class MongoManager(object):
 
-    def __init__(self, db_name, collection_name, hostname='localhost', port=27017, username="", password=""):
+    def __init__(self, db_name='VionelMovies', collection_name='BoxerMovies', hostname='172.17.42.1', port=27017, username="", password=""):
         self.db_name = db_name
         self.collection_name = collection_name
         self.hostname = hostname
