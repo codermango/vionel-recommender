@@ -9,7 +9,7 @@ from _db_helper import MongoManager
 
 class SimilarityRecommender(object):
 
-    def __init__(self):
+    def __init__(self, db_name='VionelMovies', collection_name='BoxerMovies', hostname='172.17.42.1', port=27017):
 
         self.feature_weight_dict = {
             'imdbDirector': 0.7,
@@ -24,7 +24,7 @@ class SimilarityRecommender(object):
             'RGB': 0.25,
             'brightness': 0.25
         }
-        self.mongo_manager = MongoManager()
+        self.mongo_manager = MongoManager(db_name, collection_name, hostname, port)
 
 
     def __get_imdbid_feature_dict(self, feature_name):
@@ -51,7 +51,7 @@ class SimilarityRecommender(object):
         movieid_with_featureid_dict = self.__get_imdbid_feature_dict(recommended_by)
 
         result_dict = {}
-        if recommended_by == "imdbDirectors" or recommended_by == "imdbGenres" or recommended_by == "locationCountry" or recommended_by == "locationCity" or recommended_by == "vionelScene" or recommended_by == "imdbMainactors" or recommended_by == "RGB" or recommended_by == "Brightness":
+        if recommended_by == "imdbDirector" or recommended_by == "imdbGenre" or recommended_by == "locationCountry" or recommended_by == "locationCity" or recommended_by == "vionelScene" or recommended_by == "imdbMainactor" or recommended_by == "RGB" or recommended_by == "brightness":
 
             input_featureid_with_number_dict = intersection_of_values_for_certain_keys(movieid_list, movieid_with_featureid_dict)
             all_featureid_list = input_featureid_with_number_dict.keys()
@@ -216,7 +216,7 @@ class SimilarityRecommender(object):
 
 if __name__ == '__main__':
     movieid = 'tt0308055'
-    sr = SimilarityRecommender()
+    sr = SimilarityRecommender('VionelMovies', 'TestCollection')
     result = sr.recommend([movieid], 10)
     result_json = json.dumps(result)
     print result_json
