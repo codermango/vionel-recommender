@@ -81,7 +81,14 @@ class SimilarityRecommender(object):
             input_movie_features = []
             input_movie_features = union_of_values_for_spec_keys(movieid_list, movieid_with_featureid_dict)
 
-            coefficient = 0.1
+            coefficient = 0
+            if recommended_by == "imdbGenre":
+                coefficient = 0.7 * 69325.4760905 / 223399.25309 / 3
+            elif recommended_by == "imdbMainactor":
+                coefficient = 0.7 * 215719.641732/223399.25309 / 3
+            elif recommended_by == "imdbDirector":
+                coefficient = 0.7
+                
             for k, v in movieid_with_featureid_dict.items():
                 intersection_num = len(list(set(v).intersection(set(input_movie_features))))
                 score = intersection_num * coefficient
