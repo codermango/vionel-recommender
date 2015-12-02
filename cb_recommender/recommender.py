@@ -10,19 +10,23 @@ from _db_helper import MongoManager
 
 class SimilarityRecommender(object):
 
-    def __init__(self, media_type='movie', db_name='VionelMovies', collection_name='BoxerMovies', hostname='172.17.42.1', port=27017):
+    def __init__(self, media_type='movie', 
+                       db_name='VionelMovies', 
+                       collection_name='BoxerMovies', 
+                       hostname='192.168.1.80', 
+                       port=27017):
 
         if media_type == 'movie':
             self.feature_weight_dict = {
                 'imdbDirector': 0.7,
-                'imdbGenre': 0.5,
-                'imdbKeyword': 0.6,
-                'wikiKeyword': 1.3,
-                'vionelTheme': 1.3,
+                'imdbGenre': 0.7 * 69325.4760905 / 223399.25309 / 3,
+                'imdbKeyword': 0.5,
+                'wikiKeyword': 0.5,
+                'vionelTheme': 0.5,
                 'vionelScene': 0.35,
                 'locationCountry': 0.3,
                 'locationCity': 0.5,
-                'imdbMainactor': 0.9,
+                'imdbMainactor': 0.7 * 215719.641732/223399.25309 / 3,
                 'RGB': 0.25,
                 'brightness': 0.25
             }
@@ -31,7 +35,7 @@ class SimilarityRecommender(object):
                 'imdbCreator': 1,
                 'imdbGenre': 1,
                 'imdbMainactor': 1,
-
+                'imdbKeyword': 10
             }
         self.mongo_manager = MongoManager(db_name, collection_name, hostname, port)
         self.media_type = media_type
@@ -61,7 +65,7 @@ class SimilarityRecommender(object):
         movieid_with_featureid_dict = self.__get_imdbid_feature_dict(recommended_by)
 
         result_dict = {}
-        if recommended_by == "imdbDirector" or recommended_by == "imdbGenre" or recommended_by == "locationCountry" or recommended_by == "locationCity" or recommended_by == "vionelScene" or recommended_by == "imdbMainactor" or recommended_by == "RGB" or recommended_by == "brightness" or recommended_by == 'imdbCreator':
+        if recommended_by == 'imdbMainactor' or recommended_by == 'imdbDirector' or recommended_by == 'imdbGenre' or recommended_by == "locationCountry" or recommended_by == "locationCity" or recommended_by == "vionelScene" or recommended_by == "RGB" or recommended_by == "brightness" or recommended_by == 'imdbCreator':
 
             input_featureid_with_number_dict = intersection_of_values_for_certain_keys(movieid_list, movieid_with_featureid_dict)
             all_featureid_list = input_featureid_with_number_dict.keys()
@@ -78,23 +82,19 @@ class SimilarityRecommender(object):
             return result_dict
 
         else:
+
             input_movie_features = []
             input_movie_features = union_of_values_for_spec_keys(movieid_list, movieid_with_featureid_dict)
 
-            coefficient = 0
-            if recommended_by == "imdbGenre":
-                coefficient = 0.7 * 69325.4760905 / 223399.25309 / 3
-            elif recommended_by == "imdbMainactor":
-                coefficient = 0.7 * 215719.641732/223399.25309 / 3
-            elif recommended_by == "imdbDirector":
-                coefficient = 0.7
-                
+            coefficient = 0.1
             for k, v in movieid_with_featureid_dict.items():
                 intersection_num = len(list(set(v).intersection(set(input_movie_features))))
+
                 score = intersection_num * coefficient
                 if score > 1:
                     score = 1
                 result_dict[k] = score
+
 
             return result_dict
 
@@ -160,7 +160,12 @@ class SimilarityRecommender(object):
         for feature in self.feature_weight_dict:
             feature_movieid_sim_dict = self.__get_imdbid_similarity_dict(input_movieid_list, feature)
             feature_movieid_sim_counter = Counter(feature_movieid_sim_dict)
+            print self.feature_weight_dict
             feature_movieid_sim_counter = self.__multiply_coefficient(feature_movieid_sim_counter, self.feature_weight_dict[feature])
+
+            # if feature == 'imdbKeyword':
+            #     print [(item, feature_movieid_sim_counter[item]) for item in feature_movieid_sim_counter if feature_movieid_sim_counter[item] != 0]
+            
 
             for movieid in input_movieid_list:
                 del feature_movieid_sim_counter[movieid]
@@ -169,7 +174,7 @@ class SimilarityRecommender(object):
             exec "self.%s_movieid_sim_counter = feature_movieid_sim_counter" % variable_name
 
 
-    def recommend(self, input_movieid_list, num_of_recommended_movies):
+    def recommend(self, input_movies, num_of_recommended_movies):
         """Return recommended movies and the features that contribute most in this recommendation.
             Format of the return(if num_of_recommended_movies is 2):
             {
@@ -208,6 +213,7 @@ class SimilarityRecommender(object):
 
         """
 
+        input_movieid_list = [input_movies]
         self.recommend_for_each_feature(input_movieid_list, num_of_recommended_movies)
 
         combined_movieid_sim_counter = Counter()
