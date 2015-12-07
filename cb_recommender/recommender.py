@@ -160,7 +160,7 @@ class SimilarityRecommender(object):
         for feature in self.feature_weight_dict:
             feature_movieid_sim_dict = self.__get_imdbid_similarity_dict(input_movieid_list, feature)
             feature_movieid_sim_counter = Counter(feature_movieid_sim_dict)
-            print self.feature_weight_dict
+            # print self.feature_weight_dict
             feature_movieid_sim_counter = self.__multiply_coefficient(feature_movieid_sim_counter, self.feature_weight_dict[feature])
 
             # if feature == 'imdbKeyword':
@@ -213,6 +213,9 @@ class SimilarityRecommender(object):
 
         """
 
+        # First check if the id is existed.
+        assert self.mongo_manager.exec_query({'imdbId': movieid}, {})
+
         input_movieid_list = [input_movies]
         self.recommend_for_each_feature(input_movieid_list, num_of_recommended_movies)
 
@@ -242,9 +245,14 @@ class SimilarityRecommender(object):
 if __name__ == '__main__':
     movieid = 'tt0308055'
     sr = SimilarityRecommender('movie', 'VionelMovies')
-    result = sr.recommend([movieid], 10)
-    result_json = json.dumps(result)
-    print result_json
+    result = {}
+    try:
+        result = sr.recommend(movieid, 10)
+    except AssertionError:
+        print movieid, 'is not in our database!'
+    else:
+        result_json = json.dumps(result)
+        print result_json
 
 
 
