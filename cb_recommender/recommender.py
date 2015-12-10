@@ -174,7 +174,7 @@ class SimilarityRecommender(object):
             exec "self.%s_movieid_sim_counter = feature_movieid_sim_counter" % variable_name
 
 
-    def recommend(self, input_movies, num_of_recommended_movies):
+    def recommend(self, input_movie, num_of_recommended_movies):
         """Return recommended movies and the features that contribute most in this recommendation.
             Format of the return(if num_of_recommended_movies is 2):
             {
@@ -214,9 +214,11 @@ class SimilarityRecommender(object):
         """
 
         # First check if the id is existed.
-        assert self.mongo_manager.exec_query({'imdbId': movieid}, {})
+        # print 'movieid:', movieid
+        # print 'input movies: ', input_movies
+        assert self.mongo_manager.exec_query({'imdbId': input_movie}, {})
 
-        input_movieid_list = [input_movies]
+        input_movieid_list = [input_movie]
         self.recommend_for_each_feature(input_movieid_list, num_of_recommended_movies)
 
         combined_movieid_sim_counter = Counter()
@@ -243,13 +245,13 @@ class SimilarityRecommender(object):
 ###########################################################################
 
 if __name__ == '__main__':
-    movieid = 'tt0308055'
+    movieidd = 'tt0308055'
     sr = SimilarityRecommender('movie', 'VionelMovies')
     result = {}
     try:
-        result = sr.recommend(movieid, 10)
+        result = sr.recommend(movieidd, 10)
     except AssertionError:
-        print movieid, 'is not in our database!'
+        print movieidd, 'is not in our database!'
     else:
         result_json = json.dumps(result)
         print result_json
