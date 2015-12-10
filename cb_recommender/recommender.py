@@ -40,6 +40,9 @@ class SimilarityRecommender(object):
         self.mongo_manager = MongoManager(db_name, collection_name, hostname, port)
         self.media_type = media_type
 
+    def __del__(self):
+        self.mongo_manager.close()
+
 
     def __get_imdbid_feature_dict(self, feature_name):
         result_dict = {}

@@ -18,7 +18,7 @@ class MongoManager(object):
         self.collection = self.db[collection_name]
 
     def close(self):
-        self.connection.close()
+        self.client.close()
 
 
     def exec_query(self, query, projection):
@@ -32,4 +32,5 @@ class MongoManager(object):
 if __name__ == '__main__':
     mm = MongoManager('VionelMovies', 'BoxerMovies', '172.17.42.1', 27017, '', '')
     print mm.exec_query({'imdbId': 'tt0482088'}, {"imdbId": 1, 'imdbGenres': 1, "_id": 0})
+    mm.close()
     # print mm.get_imdbid_feature_dict('imdbDirectors')
