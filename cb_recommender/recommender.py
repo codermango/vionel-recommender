@@ -11,7 +11,7 @@ from _db_helper import MongoManager
 class SimilarityRecommender(object):
 
     def __init__(self, media_type='movie', 
-                       db_name='VionelMovies', 
+                       db_name='VionelDB', 
                        collection_name='BoxerMovies', 
                        hostname='192.168.1.80', 
                        port=27017):
@@ -21,7 +21,7 @@ class SimilarityRecommender(object):
                 'imdbDirector': 0.7,
                 'imdbGenre': 0.7 * 69325.4760905 / 223399.25309 / 3,
                 'imdbKeyword': 0.5,
-                'wikiKeyword': 0.5,
+                'wikiKeyword': 0,
                 'vionelTheme': 0.5,
                 'vionelScene': 0.35,
                 'locationCountry': 0.3,
@@ -163,12 +163,7 @@ class SimilarityRecommender(object):
         for feature in self.feature_weight_dict:
             feature_movieid_sim_dict = self.__get_imdbid_similarity_dict(input_movieid_list, feature)
             feature_movieid_sim_counter = Counter(feature_movieid_sim_dict)
-            # print self.feature_weight_dict
             feature_movieid_sim_counter = self.__multiply_coefficient(feature_movieid_sim_counter, self.feature_weight_dict[feature])
-
-            # if feature == 'imdbKeyword':
-            #     print [(item, feature_movieid_sim_counter[item]) for item in feature_movieid_sim_counter if feature_movieid_sim_counter[item] != 0]
-            
 
             for movieid in input_movieid_list:
                 del feature_movieid_sim_counter[movieid]
@@ -217,8 +212,6 @@ class SimilarityRecommender(object):
         """
 
         # First check if the id is existed.
-        # print 'movieid:', movieid
-        # print 'input movies: ', input_movies
         assert self.mongo_manager.exec_query({'imdbId': input_movie}, {})
 
         input_movieid_list = [input_movie]
@@ -240,7 +233,6 @@ class SimilarityRecommender(object):
         result_dict = dict()
         result_dict["movie"] = final_ordered_recommended_movies_dict
         result_dict["reason"] = movieid_featurewithscore_dict
-        # print result_dict
         return result_dict
 
 
@@ -248,8 +240,8 @@ class SimilarityRecommender(object):
 ###########################################################################
 
 if __name__ == '__main__':
-    movieidd = 'tt0308055'
-    sr = SimilarityRecommender('movie', 'VionelMovies')
+    movieidd = 'tt0120903'
+    sr = SimilarityRecommender('movie', 'VionelDB')
     result = {}
     try:
         result = sr.recommend(movieidd, 10)
